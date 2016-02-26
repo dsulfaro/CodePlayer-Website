@@ -1,0 +1,209 @@
+
+<!doctype html>
+<html>
+<head>
+    <title>jQuery</title>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <script type="text/javascript" src="jquery.min.js"></script>
+
+    <style>
+
+    	* {
+    		font-family: arial;
+    		margin: 0;
+    		padding: 0;
+    	}
+
+    	#header{
+    		width: 100%;
+    		height: 40px;
+    		border: 1px solid gray;
+    		margin: 0 auto;
+    		background-color: #EEEEEE;;
+    	}
+
+    	#title{
+    		padding: 10px 0 0 20px;
+    		font-weight: bold;
+    		float: left;
+    	}
+
+    	#buttons{
+    		margin-left: 45%;
+    	}
+
+    	button{
+    		height: 35px;
+    		width: 60px;
+    		margin-top: 3px;
+    		background-color: #EEEEEE;
+    		font-weight: bold;
+    		border-radius: 8px;
+    		border: 1px solid gray;
+    		float: left;
+    		font-size: 1.15em;
+    	}
+
+
+    	.b.active{
+    		background-color: #808080;
+    	}
+
+
+    	.b:focus{ outline: 0; }
+
+    	#run{
+    		float: right;
+    		margin-right: 30px;
+    		width: 75px;
+    	}
+
+    	.clear{
+    		clear:both;
+    	}
+
+    	.codeContainer{
+    		height: 100%;
+    		width: 50%;
+    		float: left;
+    		position: relative;
+
+    	}
+
+    	.codeContainer textarea{
+    		width: 100%;
+    		height: 100%;
+    		border: none;
+    		border-right: 1px solid gray;
+    		box-sizing: border-box;
+    	}
+
+    	.codeLabel{
+    		right: 10px;
+    		top: 10px;
+    		position: absolute;
+    	}
+
+    	#htmlContainer, #cssContainer, #jsContainer, #resultContainer{
+    		display: none;
+    	}	
+
+    	iframe{
+    		height: 100%;
+    		position: relative;
+    		left: 10px;
+    		border: none;
+    	}
+
+
+
+
+    </style>
+
+    	
+
+</head>
+
+<body>
+
+	<div id = "header"> 
+		<h3 id = "title">CodePlayer</h3>
+		<div id = "buttons">
+			<button id = "html" class = "b">html</button>
+			<button id = "css" class = "b">css</button>
+			<button id = "js" class = "b">js</button>
+			<button id = "result" class = "b">result</button>
+		</div>
+		<button id = "run">Run</button>
+	</div>
+
+	<div class = "clear"></div>
+
+	<div class = "codeContainer" id = "htmlContainer">
+		<div class = "codeLabel">HTML</div>
+		<textarea id = "htmlCode">Example Code</textarea>
+	</div>
+
+	<div class = "codeContainer" id = "cssContainer">
+		<div class = "codeLabel">CSS</div>
+		<textarea id = "cssCode">Example Code</textarea>
+	</div>
+
+	<div class = "codeContainer" id = "jsContainer">
+		<div class = "codeLabel">JS</div>
+		<textarea id = "jsCode">Example Code</textarea>
+	</div>
+
+	<div class = "codeContainer" id = "resultContainer">
+		<div class = "codeLabel">Result</div>
+		<iframe id = "result"></iframe>
+	</div>
+
+
+
+	<script>
+
+		var string = "";
+		var showingDivs = 0;
+		var width = 100;
+
+		//$("#html").css("background-color", #808080);
+
+		// when clicking a button
+		$(".b").click(function(){
+
+			// if it is already clicked...
+			if($(this).hasClass("active")){
+
+				// remove active class to unselect it
+				$(this).removeClass("active");
+
+				// untoggle the container
+				string = (this.id);
+				$("#" + string + "Container").toggle();
+
+				// set codeContainers
+				showingDivs = showingDivs - 1;
+				var width = 100 / showingDivs;
+				$(".codeContainer").css("width", width + "%");
+
+			// if it is unclicked
+			} else {
+
+				// make it active
+				$(this).addClass("active");
+
+				// toggle the container
+				string = (this.id);
+				$("#" + string + "Container").toggle();
+
+				// set codeContainers
+				showingDivs = showingDivs + 1;
+				var width = 100 / showingDivs;
+				$(".codeContainer").css("width", width + "%");
+			}
+
+		});
+
+		// set the height of the codeContainers
+		var windowHeight = $(window).height();
+		var menuHeight = $("header").height();
+		var codeConHeight = windowHeight - menuHeight;
+		$(".codeContainer").height(codeConHeight + "px");
+
+		// run code
+		$("#run").click(function(){
+			$("iframe").contents().find("html").html('<style>' + $("#cssCode").val() + '</style>' + $("#htmlCode").val());
+		});
+
+		document.getElementById('result').contentWindow.eval( $('#jsCode').val() );
+
+
+	</script>
+
+</body>
+</html>
